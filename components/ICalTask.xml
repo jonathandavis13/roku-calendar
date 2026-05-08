@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<component name="ICalTask" extends="Task">
+    <script type="text/brightscript" uri="pkg:/source/iCalParser.brs" />
+    <script type="text/brightscript">
+        <![CDATA[
+        sub init()
+            m.top.functionName = "execute"
+        end sub
+
+        sub execute()
+            url = m.top.url
+            if url <> ""
+                m.top.events = FetchAndParseICal(url)
+            end if
+        end sub
+        ]]>
+    </script>
+
+    <interface>
+        <field id="url" type="string" />
+        <field id="events" type="array" />
+    </interface>
+</component>

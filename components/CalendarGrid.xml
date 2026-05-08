@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<component name="CalendarGrid" extends="Group">
+    <script type="text/brightscript" uri="pkg:/source/DateUtils.brs" />
+    <script type="text/brightscript" uri="pkg:/components/CalendarGrid.brs" />
+
+    <children>
+        <Label id="monthLabel" translation="[0, 0]" font="font:LargeBoldSystemFont" />
+        
+        <Group id="dayHeaders" translation="[0, 60]">
+            <!-- Will be populated in init -->
+        </Group>
+
+        <Group id="gridCells" translation="[0, 100]">
+            <!-- Will be populated in init -->
+        </Group>
+    </children>
+
+    <interface>
+        <field id="month" type="int" onChange="updateGrid" />
+        <field id="year" type="int" onChange="updateGrid" />
+        <field id="events" type="array" onChange="updateEvents" />
+    </interface>
+</component>

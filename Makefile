@@ -7,13 +7,13 @@
 # > make remove
 #
 ##########################################################################  
-APPNAME = miaplicacion
-APPTITLE = miaplicacion
+APPNAME = RokuCalendar
+APPTITLE = Roku Calendar
 
 ##########################################################################
 APPDEPS = manifest count_functions
 ZIP_EXCLUDE = -x .git\* -x manifest.template -x \*.swp -x \*.DS_Store -x \*.py -x roku_screenshot.jpg
-include ../app.mk
+include app.mk
 
 
 
@@ -35,7 +35,7 @@ rel: $(APPNAME)
 
 manifest:
 	echo "Creating manifest for $(APPTITLE)"
-	sed s/APPTITLE/$(APPTITLE)/ < manifest.template > manifest
+	sed "s/APPTITLE/$(APPTITLE)/" < manifest.template > manifest
 
 count_functions:
 	echo "Counting functions for $(APPTITLE), some Rokus limit to 768"
