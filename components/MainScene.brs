@@ -11,27 +11,43 @@ sub init()
     m.calendarGrid.year = now.GetYear()
     
     ' Trigger the iCal fetch
-    url = "webcal://p155-caldav.icloud.com/published/2/MTg2Mzk3NDczMTg2Mzk3NGG2KV__F16zhZcpGUf7pI7IFvkhTI9T0Xyt-3MSz8sv"
-    if url.Left(9) = "webcal://"
-        url = "https://" + url.Mid(9)
-    end if
-    fetchEvents(url) 
+    m.calendarUrls = [
+        "https://p155-caldav.icloud.com/published/2/MTg2Mzk3NDczMTg2Mzk3NGG2KV__F16zhZcpGUf7pI7IFvkhTI9T0Xyt-3MSz8sv",
+        "https://p43-caldav.icloud.com/published/2/NTUyODIyMjQ4NTUyODIyMuFV2TmWATgWZxsOim4AjUkQajsGMR_QaTDTo8zrrgaUMYbgTLSzbT515zEew3KJk72eDSkQFoRJ7wsBWvqWHFw"
+    ]
+    
+    m.allEvents = []
+    m.pendingRequests = m.calendarUrls.Count()
+    
+    for each url in m.calendarUrls
+        fetchEvents(url)
+    end for
 end sub
 
 sub fetchEvents(url as String)
-    m.icalTask = CreateObject("roSGNode", "ICalTask")
-    m.icalTask.url = url
-    m.icalTask.observeField("events", "onEventsReceived")
-    m.icalTask.control = "RUN"
+    task = CreateObject("roSGNode", "ICalTask")
+    task.url = url
+    task.observeField("events", "onEventsReceived")
+    task.control = "RUN"
 end sub
 
 sub onEventsReceived(event as Object)
-    events = event.getData()
-    if events <> invalid and events.Count() > 0
-        m.statusLabel.visible = false
-        m.calendarGrid.events = events
-    else
-        m.statusLabel.text = "No events found or error loading calendar."
+    task = event.getRoSGNode()
+    events = task.events
+    
+    if events <> invalid
+        m.allEvents.Append(events)
+    end if
+    
+    m.pendingRequests--
+    
+    if m.pendingRequests <= 0
+        if m.allEvents.Count() > 0
+            m.statusLabel.visible = false
+            m.calendarGrid.events = m.allEvents
+        else
+            m.statusLabel.text = "No events found or error loading calendars."
+        end if
     end if
 end sub
 
